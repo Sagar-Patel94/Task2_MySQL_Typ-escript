@@ -49,17 +49,40 @@ export default class userController {
     try {
       const date = new Date();
       var nowTime = new Date(date.getTime());
-      var Chour = nowTime.getHours();
-      var Cminute = nowTime.getMinutes();
-      var Csecond = nowTime.getSeconds();
+      var Chour: any = nowTime.getHours();
+      if (Chour < 10) {
+        Chour = "0" + Chour;
+      }
+      var Cminute: any = nowTime.getMinutes();
+      if (Cminute < 10) {
+        Cminute = "0" + Cminute;
+      }
+      var Csecond: any = nowTime.getSeconds();
+      if (Csecond < 10) {
+        Csecond = "0" + Csecond;
+      }
       var currentTime = +Chour + ":" + Cminute + ":" + Csecond;
-      console.log(currentTime);
 
       let userData: any = await userModel.findByPk(req.body.userId);
+
       let appointmentDetails: any = await appoinmentModel.findOne({
         where: { UserId: req.body.userId },
         order: [["Id", "DESC"]],
       });
+
+      let prevAppointmentDetails: any = await appoinmentModel.findOne({
+        order: [["Id", "DESC"]],
+      });
+
+      let prevUserData: any, prevUserAppStartTime, prevUserAppEndTime;
+      if (prevAppointmentDetails) {
+        prevUserData = await userModel.findOne({
+          where: { Id: prevAppointmentDetails.dataValues.UserId },
+        });
+        prevUserAppStartTime = prevAppointmentDetails.dataValues.Start_Time;
+        prevUserAppEndTime = prevAppointmentDetails.dataValues.End_Time;
+        console.log(prevUserAppStartTime);
+      }
 
       let status: any = res.locals;
 
@@ -71,13 +94,13 @@ export default class userController {
         new Date(`${date.toDateString()} ${req.body.end_time}`),
         `${date.toDateString()} HH:mm:ss`
       );
-      let diff: number = endTime.diff(startTime, "minutes");
+      let diff: number = endTime.diff(startTime, "seconds");
 
       if (userData) {
         if (status === true) {
           if (
             currentTime <= req.body.start_time &&
-            req.body.start_time <= req.body.end_time
+            currentTime <= req.body.end_time
           ) {
             if (
               appointmentDetails &&
@@ -87,22 +110,34 @@ export default class userController {
                 Message: "User can book only 1 appointment per day",
               };
             } else {
-              if (diff <= 60) {
-                let appointmentData = await appoinmentModel.create({
-                  UserId: req.body.userId,
-                  Name: userData.dataValues.Name,
-                  Product: req.body.product,
-                  Contact: req.body.contact,
-                  Date: date.toDateString(),
-                  Current_Time: currentTime,
-                  Start_Time: req.body.start_time,
-                  End_Time: req.body.end_time,
-                });
-                response = {
-                  Message: "Appointment successfully created",
-                  Status: 200,
-                  Data: appointmentData,
-                };
+              if (diff <= 3600) {
+                console.log(req.body.end_time <= prevUserAppEndTime);
+                if (
+                  req.body.start_time >= prevUserAppStartTime &&
+                  req.body.end_time <= prevUserAppEndTime &&
+                  prevUserData.dataValues.Status === true
+                ) {
+                  response = {
+                    Message: "Time not available",
+                  };
+                } else {
+                  let appointmentData = await appoinmentModel.create({
+                    UserId: req.body.userId,
+                    Name: userData.dataValues.Name,
+                    Product: req.body.product,
+                    Price: req.body.price,
+                    Contact: req.body.contact,
+                    Date: date.toDateString(),
+                    Current_Time: currentTime,
+                    Start_Time: req.body.start_time,
+                    End_Time: req.body.end_time,
+                  });
+                  response = {
+                    Message: "Appointment successfully created",
+                    Status: 200,
+                    Data: appointmentData,
+                  };
+                }
               } else {
                 response = {
                   Message: "End time must be less than 1 hour from start time",

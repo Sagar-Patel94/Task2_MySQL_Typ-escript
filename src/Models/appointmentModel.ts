@@ -28,6 +28,10 @@ appointment.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    Price: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     Contact: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -37,15 +41,15 @@ appointment.init(
       allowNull: false,
     },
     Current_Time: {
-      type: DataTypes.STRING,
+      type: DataTypes.TIME,
       allowNull: false,
     },
     Start_Time: {
-      type: DataTypes.STRING,
+      type: DataTypes.TIME,
       allowNull: false,
     },
     End_Time: {
-      type: DataTypes.STRING,
+      type: DataTypes.TIME,
       allowNull: false,
     }
   },
