@@ -46,3 +46,29 @@ console.log(currentTime <= sTime && currentTime <= eTime)
                 //     Message: "Time not available",
                 //   };
                 // } else {}
+
+                // try {
+                //   let inactiveAllUsersArray = [];
+                //   let inactiveAllUsersAppoArray: any = [];
+                //   let inactiveAllUsers: any = await userModel.findAll({
+                //     where: { Status: false },
+                //   });
+                //   if (inactiveAllUsers.length !== 0) {
+                //     for (var i = 0; i < inactiveAllUsers.length; i++) {
+                //       inactiveAllUsersArray.push(inactiveAllUsers[i].dataValues);
+                //     }
+                //   }
+                //   for (var i = 0; i < inactiveAllUsersArray.length; i++) {
+                //     let inactiveAllUsersAppoData: any = await appoinmentModel.findAll({
+                //       where: { UserId: inactiveAllUsersArray[i].Id },
+                //     });
+                //     if (inactiveAllUsersAppoData.length !== 0) {
+                //       inactiveAllUsersAppoArray.push(
+                //         inactiveAllUsersAppoData[0].dataValues
+                //       );
+                //     }
+                //   }
+                //   console.log("///", inactiveAllUsersAppoArray, "///");
+                // } catch (error: any) {
+                //   console.log(error.message);
+                // }

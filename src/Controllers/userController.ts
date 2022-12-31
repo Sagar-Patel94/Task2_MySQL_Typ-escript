@@ -45,6 +45,28 @@ export default class userController {
   };
 
   static createAppointment = async (req: Request, res: Response) => {
+    //   let inactiveAllUsersArray = [];
+    //   let inactiveAllUsersAppoArray: any = [];
+    //   let inactiveAllUsers: any = await userModel.findAll({
+    //     where: { Status: false },
+    //   });
+    //   if (inactiveAllUsers.length !== 0) {
+    //     for (var i = 0; i < inactiveAllUsers.length; i++) {
+    //       inactiveAllUsersArray.push(inactiveAllUsers[i].dataValues);
+    //     }
+    //   }
+    //   for (var i = 0; i < inactiveAllUsersArray.length; i++) {
+    //     let inactiveAllUsersAppoData: any = await appoinmentModel.findAll({
+    //       where: { UserId: inactiveAllUsersArray[i].Id },
+    //     });
+    //     if (inactiveAllUsersAppoData.length !== 0) {
+    //       inactiveAllUsersAppoArray.push(
+    //         inactiveAllUsersAppoData[0].dataValues
+    //       );
+    //     }
+    //   }
+    //   console.log("///", inactiveAllUsersAppoArray, "///");
+    
     let response;
     try {
       const date = new Date();
@@ -81,7 +103,6 @@ export default class userController {
         });
         prevUserAppStartTime = prevAppointmentDetails.dataValues.Start_Time;
         prevUserAppEndTime = prevAppointmentDetails.dataValues.End_Time;
-        console.log(prevUserAppStartTime);
       }
 
       let status: any = res.locals;
@@ -111,7 +132,6 @@ export default class userController {
               };
             } else {
               if (diff <= 3600) {
-                console.log(req.body.end_time <= prevUserAppEndTime);
                 if (
                   req.body.start_time >= prevUserAppStartTime &&
                   req.body.end_time <= prevUserAppEndTime &&
