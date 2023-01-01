@@ -1,9 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../DbConnection/dbConn";
 
-class appointment extends Model {
-  Id: any;
-}
+class appointment extends Model {}
 
 appointment.init(
   {
